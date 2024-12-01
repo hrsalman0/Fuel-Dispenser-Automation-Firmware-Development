@@ -107,6 +107,8 @@ int main(void)
 	HAL_StatusTypeDef pause_Fueling;
 	uint8_t address;
 	uint8_t fuelAmount;
+	uint8_t price;
+	uint8_t buffer[10];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -200,10 +202,33 @@ int main(void)
 			  }
 		  }
 		  else if(keyPressed == 'C'){ // C is for price change
-
-		  }
-		  else if(keyPressed == 'D'){
-
+			  if(keyPressed == '1'){
+				  gain_Control = gainControl(address);
+				  Write_UnitPrice = WriteUnitPrice(address, price);
+				  HD44780_Clear();
+				  HD44780_PrintStr("Enter new unit price: ");
+				  HAL_Delay(500);
+				  price = keyPressed;
+				  return_Control = returnControl(address);
+			  }
+			  else if(keyPressed == '2'){
+				  Read_UnitPrice = ReadUnitPrice(address);
+				    if (Read_UnitPrice == HAL_OK) {
+				       // Successfully received data
+						HD44780_Clear();
+						HD44780_PrintStr(buffer);
+						HAL_Delay(500);
+				    }else if (Read_UnitPrice == HAL_TIMEOUT) {
+						HD44780_Clear();
+						HD44780_PrintStr("Receive Timeout");
+						HAL_Delay(500);
+				    }else {
+						HD44780_Clear();
+						HD44780_PrintStr("Receive Error!");
+						HAL_Delay(500);
+						return_Control = returnControl(address);
+				    }
+			  }
 		  }
 	  }
 	  else
